@@ -15,8 +15,6 @@ function SearchPage() {
   const [{term}] = useStateValue();
     
   const {data} = useGoogleSearch(term);
-  console.log(data);
-  
 
   return (
     <div className="searchPage">
@@ -76,39 +74,34 @@ function SearchPage() {
 
       { 
         term && (
-      
       <div className="searchPage_results">
         <p className="seachPage_resultCount">
-        About {data?.searchInformation?.formattedTotalResults || '0'} results (0.57) for {term}
+        About {data?.searchInformation?.formattedTotalResults} results ( {data?.searchInformation?.formattedSearchTime}seconds) for {term}
         </p>
-        <div className="searchPage_result">
-          <a href="" className="searchPage_resultLink">
-            <img src="data:image/png;base64,
-            iVBORw0KGgoAAAANSUhEUgAAABwAAAAc
-            CAMAAABF0y+mAAAAS1BMVEX///+k3Op3z
-            eGN1OXM6/Pc8feX2Oec2ej0+/xix958z+
-            LH6fKz4e1YxNzk9Phvy+BJwNrA5vCF0eT
-            R7fS34+4/vtno9vkzvNfx+vwXKPc3AAAB
-            EklEQVR4AbXRRaLdMAxA0Rsy21JASfa/0
-            j6n7efpPwMzSvyyYZzmXi9u9IHPYsql1h
-            ZEhzwpn6zxKVWHXm8DH02ll7vW46kjH40
-            ZWOwMugJN+SjNtKziXLJ14ax8tEWrupUX
-            Z/WKkXerVWGtPNLAVK28bavLqdgCd4Nw3
-            bKfUXiUCFTZYDBLr1IMSBOdLkCxk2C16
-            g460Q+gswYcFrj75AzV83KFXvoRiNGD
-            MxU4qv4b7URCsPs6Ydmfk+LOpIEH/pKR
-            IjzchBObeBNGtdGGed/nYqNqPPkg5TsP
-            GkXE/Hq2ykfjDGQNxOF74Lejl6WK+y
-            Flx9jLRW3utXd8or7tyeZFJbdy3Xxyb
-            xoLL4fo2PhVfwB6eg3nGSu+JgAAAABJ
-            RU5ErkJggg==" className="searchPage_resultImage"/>
-            github.com
-          </a>
-          <a href="" className="searchPage_resultTitle">
-            <h2>React Documentation</h2>
-          </a>
-          <p className="searchPage_resultDescription">This page is an overview of the React documentation and related resources. React is a JavaScript library for building user interfaces.</p>
-        </div>
+      {
+  data?.items?.length > 0 && data.items.map((item) => (
+    <div className="searchPage_result" key={item.link}>
+      <a href={item.link} className="searchPage_resultLink">
+        {item.pagemap?.cse_image?.length > 0 && item.pagemap?.cse_image[0]?.src && (
+          <img 
+            src={item.pagemap.cse_image[0].src} 
+            className="searchPage_resultImage"
+            style={{height:"50px",width:"90px"}}
+            alt=""
+          />
+        )}
+        {item.displayLink}
+      </a>
+      <a href={item.link} className="searchPage_resultTitle">
+        <h2>{item.title}</h2>
+      </a>
+      <p className="searchPage_resultDescription">
+        {item.snippet}
+      </p>
+    </div>
+  ))
+}
+
       </div>
         )}
     </div>
